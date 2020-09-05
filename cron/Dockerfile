@@ -17,3 +17,6 @@ ENV SLACK_URL
 # RUN apk add curl vim
 #
 # NOTE: Add custom cron entries to /etc/crontabs/root
+#
+# Run cron in foreground with log level 8
+CMD ["crond", "-f", "-l", "8"]
