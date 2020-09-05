@@ -1,0 +1,8 @@
+SHELL=/bin/bash
+BASH_ENV=/etc/environment
+
+# Run every 6th hour
+0 */6 * * * /app/run.sh
+
+# NOTE: run as a different user, if you can
+# * * * * * su -c '/app/run.sh' -s /bin/sh app > /var/log/app.log 2>&1
