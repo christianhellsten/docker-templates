@@ -16,8 +16,9 @@ WORKDIR /app
 # USER app
 # The hook URL of the Slack channel where notifications will be sent
 ENV SLACK_URL
-# For debugging etc
-# RUN apk add curl vim
+# Curl is only needed for Slack notifications
+RUN apk add curl
+# RUN apk add vim
 #
 # NOTE: Add custom cron entries to /etc/crontabs/root
 #
