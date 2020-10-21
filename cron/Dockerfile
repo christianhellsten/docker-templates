@@ -1,6 +1,6 @@
 FROM alpine
 #
-# NOTE: Run the script weekly. Use any of the predefined directories for other options:
+# NOTE: You can also use any of the predefined directories:
 #
 #  /etc/periodic/15min
 #  /etc/periodic/hourly
@@ -8,7 +8,10 @@ FROM alpine
 #  /etc/periodic/weekly
 #  /etc/periodic/monthly
 #
-COPY run.sh /etc/periodic/weekly/run.sh
+# COPY run.sh /etc/periodic/weekly/run
+
+COPY cron /etc/crontabs/root
+
 WORKDIR /app
 # USER app
 # The hook URL of the Slack channel where notifications will be sent
