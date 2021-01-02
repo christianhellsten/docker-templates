@@ -65,7 +65,7 @@ ENV PATH "/app/vendor/bundle/bin:/app/node_modules/.bin:${PATH}"
 # Set working dir
 ENV RAILS_ROOT /app
 
-ARG RAILS_ENV
+ARG RAILS_ENV=production
 ARG DB_HOST
 ARG DB_NAME
 ARG DB_USER
@@ -106,22 +106,25 @@ RUN apk add --update --no-cache \
 # BUILDER: install and cache Ruby & Javascript dependencies
 #
 FROM builder AS ruby
+ENV RAILS_ENV=production
 
 #
 # RUBY
 #
-
 # Add and cache Ruby dependencies
 COPY Gemfile Gemfile.lock /app/
 # Install Ruby and Javascript dependencies
-RUN gem install bundler:2.0.2 rake
-# RUN bundle config --global frozen 1 \
-RUN bundle install --jobs 20 --retry 5 --with=$RAILS_ENV --deployment
+RUN gem install --force bundler rake && \
+  bundle config set without development test && \
+  bundle config set --local deployment 'true' && \
+  bundle install --jobs 10 --retry 5 && \
+  bundle clean --force
 
 #
 # ASSETS
 #
 FROM builder AS assets
+ENV RAILS_ENV=production
 
 # Add and cache Javascript dependencies
 COPY package.json yarn.lock ./
