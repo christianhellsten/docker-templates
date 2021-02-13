@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# This script runs a python script and sends the result to Slack.
+#
+cd /app
+
+# NOTE: Make cron to use the same environment variables as Docker
+# $$ = 1 in Docker
+export $(xargs -0 -a "/proc/1/environ")
 
 # TODO: Replace this line with the cron command you want to run. Remember to
 # write stdout and stderr to the log file.
