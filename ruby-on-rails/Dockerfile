@@ -69,7 +69,8 @@ ARG RAILS_ENV=production
 ARG DB_HOST
 ARG DB_NAME
 ARG DB_USER
-ARG DB_PASS
+# WARNING: This will be visible in the Image layer
+# ARG DB_PASS
 
 # Set ENV variables
 ENV RAILS_ENV ${RAILS_env}
@@ -77,9 +78,9 @@ ENV RACK_ENV ${RAILS_ENV}
 ENV DB_HOST ${DB_HOST}
 ENV DB_NAME ${DB_NAME}
 ENV DB_USER ${DB_USER}
-ENV DB_PASS ${DB_PASS}
+# WARNING: This will be visible in the Image layer
+# ARG DB_PASS
 ENV RAILS_LOG_TO_STDOUT true
-
 # Add aliases
 RUN echo "export LS_OPTIONS='--color=auto'" >> "$HOME/.bashrc" \
     && echo "alias ls='ls $LS_OPTIONS'" >> "$HOME/.bashrc" \
@@ -152,11 +153,11 @@ RUN rm -rf app/assets node_modules log tmp \
 FROM base
 
 #
-# NOTE: Don't run as root
+# NOTE: Don't run as root use uid:gid = 10000:10001
 #
 # Debian:
 # RUN useradd --user-group -m --home /app --shell /bin/false app
-RUN addgroup -S app && adduser -S app -G app && chown -R app /app/ && chgrp -R app /app/ && chmod -R 740 /app/
+RUN addgroup -S app && adduser --uid 10000 --gid 10001 -S app -G app && chown -R app /app/ && chgrp -R app /app/ && chmod -R 740 /app/
 
 USER app
 
