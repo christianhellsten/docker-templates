@@ -22,12 +22,20 @@ COPY .docker/entrypoint.sh /app
 COPY .docker/cron /etc/cron.d/app
 RUN crontab /etc/cron.d/app
 
+# Add user
+RUN addgroup -S app && adduser --uid 10000 --gid 10001 -S app -G app && chown -R app /app/ && chgrp -R app /app/ && chmod -R 740 /app/
+
 #
 # To export from pipenv use:
 # pipenv lock --requirements > requirements.txt
 #
+# Cache dependencies in a separate layer to avoid reinstallation
 ADD requirements.txt /app/
-COPY . .
 RUN pip install -r requirements.txt
+
+# Copy rest of application
+COPY --chown=app:app . .
+
+USER app
 
 ENTRYPOINT ["/app/entrypoint.sh"]
