@@ -1,0 +1,41 @@
+#
+# Examples of how to run services with Docker Compose:
+#
+#  - redis
+#  - rabbitmq
+#
+version: "3.8"
+services:
+  redis:
+    image: "redis:alpine"
+    command: redis-server --requirepass password
+    ports:
+     - "6379:6379"
+    volumes:
+     - ./.docker-data/redis-data:/var/lib/redis
+     - ./.docker-data/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - app
+    environment:
+     - REDIS_REPLICATION_MODE=master
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    volumes:
+      - ./.docker-data/rabbitmq/logs/:/var/log/rabbitmq/:ro
+    env_file: ./app.env
+    networks:
+      - app
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+networks:
+  app:
+    driver: bridge
