@@ -22,6 +22,9 @@ services:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
     volumes:
+      # Download template from here:
+      # https://github.com/rabbitmq/rabbitmq-server/blob/v3.9.1/deps/rabbit/docs/rabbitmq.conf.example
+      - ./.docker-data/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.config
       - ./.docker-data/rabbitmq/logs/:/var/log/rabbitmq/:ro
     env_file: ./app.env
     networks:
